@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda Online</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+    h1 { text-align: center; }
+    .producto { border: 1px solid #ccc; padding: 10px; margin: 10px; border-radius: 10px; }
+    .producto button { margin-top: 10px; }
+    .productos, .carrito { display: flex; flex-wrap: wrap; justify-content: center; }
+    .carrito { margin-top: 30px; border-top: 2px solid #333; padding-top: 20px; }
+  </style>
+</head>
+<body>
+
+<h1>Mi Tienda Online</h1>
+
+<div class="productos" id="lista-productos">
+  <!-- Los productos se cargarán aquí -->
+</div>
+
+<h2>Carrito de Compras</h2>
+<div class="carrito" id="carrito">
+  <p>No hay productos en el carrito.</p>
+</div>
+<button onclick="finalizarCompra()">Finalizar Compra</button>
+
+<script>
+const productos = [
+  { id: 1, nombre: "Producto 1", precio: 100 },
+  { id: 2, nombre: "Producto 2", precio: 150 },
+  { id: 3, nombre: "Producto 3", precio: 200 }
+];
+
+const carrito = [];
+
+function mostrarProductos() {
+  const lista = document.getElementById('lista-productos');
+  productos.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'producto';
+    div.innerHTML = `<h3>${p.nombre}</h3><p>Precio: $${p.precio}</p><button onclick="agregarAlCarrito(${p.id})">Agregar al carrito</button>`;
+    lista.appendChild(div);
+  });
+}
+
+function agregarAlCarrito(id) {
+  const producto = productos.find(p => p.id === id);
+  carrito.push(producto);
+  actualizarCarrito();
+}
+
+function actualizarCarrito() {
+  const carritoDiv = document.getElementById('carrito');
+  carritoDiv.innerHTML = '';
+  if (carrito.length === 0) {
+    carritoDiv.innerHTML = '<p>No hay productos en el carrito.</p>';
+    return;
+  }
+  let total = 0;
+  carrito.forEach((p, i) => {
+    total += p.precio;
+    carritoDiv.innerHTML += `<p>${p.nombre} - $${p.precio} <button onclick="eliminarDelCarrito(${i})">Eliminar</button></p>`;
+  });
+  carritoDiv.innerHTML += `<h3>Total: $${total}</h3>`;
+}
+
+function eliminarDelCarrito(index) {
+  carrito.splice(index, 1);
+  actualizarCarrito();
+}
+
+function finalizarCompra() {
+  if (carrito.length === 0) {
+    alert("El carrito está vacío");
+    return;
+  }
+  alert("Gracias por tu compra! Total: $" + carrito.reduce((acc, p) => acc + p.precio, 0));
+  carrito.length = 0;
+  actualizarCarrito();
+}
+
+mostrarProductos();
+</script>
+
+</body>
+</html>
